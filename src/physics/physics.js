@@ -8,17 +8,21 @@ export class Physics {
   static init(app) {
     CollisionDetector.instance.init([
       {
-        tag         : CollisionTag.Ship,
-        collideTags : [CollisionTag.Enemy, CollisionTag.EnemyBullet, CollisionTag.Booster],
+        tag: CollisionTag.Ship,
+        collideTags: [CollisionTag.Enemy, CollisionTag.EnemyBullet, CollisionTag.Booster],
       },
       {
-        tag         : CollisionTag.ShipBullet,
-        collideTags : [CollisionTag.Enemy, CollisionTag.Bounding],
+        tag: CollisionTag.ShipBullet,
+        collideTags: [CollisionTag.Enemy, CollisionTag.Bounding],
       },
       {
-        tag         : CollisionTag.EnemyBullet,
-        collideTags : [CollisionTag.Bounding],
+        tag: CollisionTag.EnemyBullet,
+        collideTags: [CollisionTag.Bounding],
       },
+      {
+        tag: CollisionTag.ClawHook,
+        collideTags: [CollisionTag.Reward],
+      }
     ]);
 
     app.ticker.add(this.update, this);

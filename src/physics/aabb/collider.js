@@ -13,6 +13,7 @@ export class Collider extends Sprite {
     this.visible = false;
     this.tag = tag;
     this.collideData = {};
+    this.alpha = 0.5;
     CollisionDetector.instance.add(this);
 
     if (GameConstant.DEBUG_DRAW_COLLIDER) {
