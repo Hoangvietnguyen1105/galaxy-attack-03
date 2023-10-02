@@ -40,9 +40,11 @@ export class PlayScene extends Scene {
 
   create() {
     super.create();
+
     this._initBackground();
+        this._initPlayer();
+
     this._initGameplay();
-    this._initPlayer();
     this._initUI();
     this._initAwesomeUI();
     this._initWarningUI();
@@ -245,7 +247,7 @@ export class PlayScene extends Scene {
     this.waveManager.on(WaveEvent.Complete, this._onWavesCompleted, this);
     this.gameplay.addChild(this.waveManager);
 
-    let wave1 = new Wave6(boosterSpawner);
+    let wave1 = new Wave6(this.player,boosterSpawner);
     wave1.on(WaveEvent.OnEnemyDie, this._onEnemyDie, this);
     wave1.on(WaveEvent.Complete, this._onWave1Complete, this);
 

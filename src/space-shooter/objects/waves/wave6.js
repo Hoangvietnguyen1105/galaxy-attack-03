@@ -14,9 +14,10 @@ import { GameConstant } from "../../../gameConstant";
 import { WeaponBase } from "../weapons/weaponBase";
 import { GameState, GameStateManager } from "../../../pureDynamic/systems/gameStateManager";
 import { SoldierEnemy } from "../enemies/soldierEnemy";
+import { Tween } from "../../../systems/tween/tween";
 
 export class Wave6 extends CommonWave {
-  constructor(boosterSpawner) {
+  constructor(target,boosterSpawner) {
     super();
     this.y = -GameResizer.height * 0.45;
     this.interval.max = 2;
@@ -27,6 +28,13 @@ export class Wave6 extends CommonWave {
     this.boosterSpawner = boosterSpawner;
 
     this._initEnemy();
+    console.log(target)
+    this.target = target; 
+    this.tweens = [];
+    this.attackOffset = 50;
+    this._targetGlobal = new PIXI.Point();
+    this._targetLocal = new PIXI.Point();
+    this._distance = new PIXI.Point();
     this._initHitSpawner(this.foreWave);
   }
 
@@ -44,14 +52,66 @@ export class Wave6 extends CommonWave {
       enemy.update(dt);
     });
   }
+    playAttackAnimation(enemy) {
+    enemy.attacking = true;
+    this.target.getGlobalPosition(this._targetGlobal, true);
+    enemy.parent.toLocal(this._targetGlobal, null, this._targetLocal, true);
+    this._targetLocal.x += this.attackOffset * Util.sign(enemy.x - this._targetLocal.x);
+
+    let tweenX = Tween.createTween(enemy, {
+      x: this._targetLocal.x}, {
+      duration: 2,
+      easing: Tween.Easing.Sinusoidal.In,
+      onComplete: () => this.onTweenComplete(tweenX),
+    }).start();
+
+    let tweenDown = Tween.createTween(enemy, { y: this._targetLocal.y}, {
+      easing: Tween.Easing.Back.In,
+      duration: 2,
+      onComplete: () => this.onTweenComplete(tweenDown),
+    }).start();
+
+    let enemyY = enemy.y;
+    let enemyX = enemy.x;
+    enemy.x = this._targetLocal.x
+    enemy.y = this._targetLocal.y;
+    let tweenUp = Tween.createTween(enemy, { x: enemyX, y: enemyY }, {
+      duration: 2,
+      easing: Tween.Easing.Sinusoidal.InOut,
+      onComplete: () => {
+        enemy.attacking = false;
+        this.onTweenComplete(tweenUp);
+      },
+    });
+
+    enemy.x = enemyX;
+    enemy.y = enemyY;
+    tweenDown.chain(tweenUp);
+    tweenDown.start();
+    tweenX.start();
+    enemy.tweens = [tweenX, tweenDown, tweenUp];
+  }
+ onTweenComplete(tween) {
+    this.tweens.splice(this.tweens.indexOf(tween), 1);
+  }
+
 
   onInterval() {
     super.onInterval();
-    if (GameStateManager.isState(GameState.Playing)) {
-      let enemy = Util.randomFromList(this.enemies);
-      enemy?.shoot();
-    }
+    // if (GameStateManager.isState(GameState.Playing)) {
+    //   let enemy = Util.randomFromList(this.enemies);
+    //   enemy?.shoot();
+    //if (GameStateManager.isState(GameState.Playing)) {
+   // onInterval();
+   if (GameStateManager.isState(GameState.Playing)) {
+     
+    let enemy = Util.randomFromList(this.enemies.filter(enemy => !enemy.attacking && enemy.ship.name === 'galaga'));
+    enemy && this.playAttackAnimation(enemy);
+    let enemy2 = Util.randomFromList(this.enemies.filter(enemy2 =>enemy2.ship.name !== 'galaga'));
+    enemy2?.shoot();
+   }
   }
+  
 
   onEnemyDie(enemy) {
     super.onEnemyDie(enemy);
@@ -67,6 +127,7 @@ export class Wave6 extends CommonWave {
     }
     // this._spawnHitFx(enemy, this.foreWave);
   }
+
 
   _initBullet() {
     let bulletCollider = new Collider(CollisionTag.EnemyBullet);

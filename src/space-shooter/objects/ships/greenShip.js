@@ -18,7 +18,7 @@ export class GreenShip extends ShipBase {
     this.initBaseSprite(Texture.from("ship_phoenix_dark"));
     this.collider.y = 30;
     this.body.setHP(GameConstant.SHIP_HP);
-
+    
     for (var i = 0; i < 11; i++) {
       this.addWeapon();
     }

@@ -34,8 +34,8 @@ export const GameConstant = Object.freeze({
   BOOSTER_MAGNET_SIZE: 800,
   BOOSTER_MAGNET_SPEED: 800,
 
-  WAVE_1_ENEMY_HP: 4,
-  WAVE_2_ENEMY_HP: 8,
+  WAVE_1_ENEMY_HP: 6,
+  WAVE_2_ENEMY_HP: 10,
   WAVE_3_ENEMY_HP: 100,
 
   WAVE_4_ENEMY_HP: 10,

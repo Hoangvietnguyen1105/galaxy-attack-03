@@ -4,6 +4,8 @@ import { Tween } from "../../../systems/tween/tween";
 export class SoldierEnemy extends Container {
   constructor() {
     super("soldierEnemy");
+    this.name = 'galaga'
+
     this.scale.set(0.55);
     this._initBody();
     this._initHorn();

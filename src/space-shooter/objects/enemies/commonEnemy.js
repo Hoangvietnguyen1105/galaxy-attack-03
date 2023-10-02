@@ -22,7 +22,7 @@ export class CommonEnemy extends EnemyBase {
     this.healthBar.x = -30;
     this.healthBar.y = 50;
     this.healthBar.visible = false;
-    this.addAnimator(this.healthBar);
+   // this.addAnimator(this.healthBar);
   }
 
   update(dt) {
@@ -91,7 +91,7 @@ export class CommonEnemy extends EnemyBase {
   }
 
   playHittedAnimation() {
-    this.healthBar.visible = true;
+    this.healthBar.visible = false;
     this.animator.state.setEmptyAnimation(1, 0);
     this.animator.state.addAnimation(1, "Hitted", false, 0);
   }
