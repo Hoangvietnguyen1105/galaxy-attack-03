@@ -1,0 +1,10 @@
+buffEffect.png
+size:256,128
+filter:Linear,Linear
+pma:true
+scale:0.75
+images/Light
+bounds:2,2,82,79
+offsets:0,1,82,80
+images/Light2
+bounds:86,31,50,50

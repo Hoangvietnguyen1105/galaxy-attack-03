@@ -1,0 +1,7 @@
+boosterEffect.png
+size:128,128
+filter:Linear,Linear
+pma:true
+scale:0.5
+images/Buff_Effect
+bounds:2,2,65,65
