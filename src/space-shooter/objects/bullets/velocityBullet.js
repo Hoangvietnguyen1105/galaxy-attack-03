@@ -6,7 +6,7 @@ import { BulletBase } from "./bulletBase";
 export class VelocityBullet extends BulletBase {
   constructor(texture, collider) {
     super();
-    this.damage = 1;
+    this.damage = 10;
     this.anchor = new PIXI.Point();
     this.velocity = new PIXI.Point();
     this.velocityExtends = new PIXI.Point();

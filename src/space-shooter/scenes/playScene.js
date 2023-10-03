@@ -116,6 +116,10 @@ export class PlayScene extends Scene {
     this.pauseUI.visible = isVisible;
     this.player.setTutorialVisible(isVisible);
   }
+  update(dt){
+    if(this.player)
+      this.player.ship.update(dt)
+  }
 
   resize() {
     super.resize();

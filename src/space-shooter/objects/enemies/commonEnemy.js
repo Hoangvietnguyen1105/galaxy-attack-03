@@ -12,7 +12,7 @@ export class CommonEnemy extends EnemyBase {
     this.sprite = null;
     /** @type {SpineAnimator} */
     this.animator = null;
-    this.collider.collideData.damage = Infinity;
+    this.collider.collideData.damage = 20;
     this._initExplodeEffect();
     this._initHealthBar();
   }
@@ -22,7 +22,7 @@ export class CommonEnemy extends EnemyBase {
     this.healthBar.x = -30;
     this.healthBar.y = 50;
     this.healthBar.visible = false;
-   // this.addAnimator(this.healthBar);
+   this.addAnimator(this.healthBar);
   }
 
   update(dt) {
@@ -72,7 +72,7 @@ export class CommonEnemy extends EnemyBase {
   }
 
   playHitAnimation() {
-    this.healthBar.visible = true;
+    //this.healthBar.visible = true;
     let tweenhitAnimation = Tween.createTween(this.animator, {
       tint: 0xbc5d5d,
     }, {
@@ -91,7 +91,7 @@ export class CommonEnemy extends EnemyBase {
   }
 
   playHittedAnimation() {
-    this.healthBar.visible = false;
+    this.healthBar.visible = true;
     this.animator.state.setEmptyAnimation(1, 0);
     this.animator.state.addAnimation(1, "Hitted", false, 0);
   }

@@ -9,6 +9,8 @@ import { Body } from "../base/body";
 import { BodyEvent } from "../base/bodyEvent";
 import { WeaponEvent } from "../weapons/weaponEvent";
 import { ShipEvent } from "./shipEvent";
+import { HealthBar } from "../healthbar/healthBar";
+import { CurvedHealthBar } from "../healthbar/curveBar";
 
 export class ShipBase extends PIXI.Container {
   constructor(scene) {
@@ -21,6 +23,7 @@ export class ShipBase extends PIXI.Container {
     this.body = new Body();
     this.body.on(BodyEvent.Die, this.die, this);
     this._initCollider();
+    this._initHealthBar()
   }
 
   onStart() {
@@ -38,11 +41,27 @@ export class ShipBase extends PIXI.Container {
     this.baseAnimator = new SpineAnimator(spineData);
     this.addChild(this.baseAnimator);
   }
+   _initHealthBar() {
+    this.healthBar = new CurvedHealthBar(140, 6);
+    this.healthBar.x = 0;
+    this.healthBar.y = 50;
+    this.addChild(this.healthBar);
+    this.healthBar.visible = true;
+    
+  }
+   update(dt) {
+    console.log(this.body.hp)
+    this.healthBar.update(this.body.hp, this.body.maxHP);
+  }
 
   onCollide(collider) {
     let damage = collider.collideData.damage;
     if (damage) {
+      if(this.body.hp <= -50)
+        damage = 0
       this.body.takeDamage(damage);
+      if(!this.body.immortal)
+        this.playImmortalEffect(0.5)
     }
 
     let levelup = collider.collideData.levelup;

@@ -21,7 +21,7 @@ export const GameConstant = Object.freeze({
   PLAYER_REVIVE_IMMORTAL_DURATION: 1,
 
   SHIP_SPEED: 15,
-  SHIP_HP: 1,
+  SHIP_HP: 50,
   SHIP_IMMORTAL: false,
   SHIP_PURPLE_BULLET_DAMAGE: 10,
   SHIP_GREEN_BULLET_DAMAGE: 5,
@@ -34,8 +34,8 @@ export const GameConstant = Object.freeze({
   BOOSTER_MAGNET_SIZE: 800,
   BOOSTER_MAGNET_SPEED: 800,
 
-  WAVE_1_ENEMY_HP: 6,
-  WAVE_2_ENEMY_HP: 10,
+  WAVE_1_ENEMY_HP: 60,
+  WAVE_2_ENEMY_HP: 600,
   WAVE_3_ENEMY_HP: 100,
 
   WAVE_4_ENEMY_HP: 10,
