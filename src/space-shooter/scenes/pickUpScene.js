@@ -157,15 +157,15 @@ export class PickUpScene extends Scene {
 
         let reward = new PIXI.Sprite(PIXI.Texture.from("circle"));
         reward.anchor.set(0.5, 0.5);
-        reward.scale.set(0.2);
+        reward.scale.set(0.3);
         reward.x = x;
         reward.y = y;
         this.bgMachine.addChild(reward);
 
         let spaceShip = new PIXI.Sprite(PIXI.Texture.from("ship"));
         spaceShip.anchor.set(0.5, 0.5);
-        spaceShip.y = -8;
-        spaceShip.scale.set(0.9);
+        spaceShip.y = -20;
+        spaceShip.scale.set(0.65);
         reward.addChild(spaceShip);
         this.playFx();
         Tween.createTween(
@@ -180,7 +180,7 @@ export class PickUpScene extends Scene {
             }
         ).start();
         Tween.createCountTween({
-            duration:3,
+            duration:4,
             onComplete:()=>{
                 this.goToPlayScene()
             }
@@ -304,7 +304,7 @@ export class PickUpScene extends Scene {
 
     _initItem(texture, x, y, colliderWidth, colliderHeight, angle, x1 = 0, y1 = 0) {
 
-        let ship = new PIXI.Sprite(PIXI.Texture.from("ship"));
+        let ship = new PIXI.Sprite(PIXI.Texture.from("ship1"));
         ship.angle = angle + 60;
         ship.x = x - texture.width / 2;
         ship.y = y - texture.height / 2 + 27;
