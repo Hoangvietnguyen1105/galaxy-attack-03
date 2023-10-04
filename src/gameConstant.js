@@ -10,7 +10,7 @@ export const GameConstant = Object.freeze({
   SCENE_PICK_UP: "PickUpScene",
 
   DEBUG_ON: true,
-  DEBUG_DRAW_COLLIDER: true,
+  DEBUG_DRAW_COLLIDER: false,
   SOUND_ENABLED: true,
   SHOW_GAME_TAG: false,
 

@@ -8,6 +8,11 @@ import { GameResizer } from "../../pureDynamic/systems/gameResizer";
 import { Tween } from "../../systems/tween/tween";
 import { Collider } from "../../physics/aabb/collider";
 import { CollisionTag } from "../../physics/aabb/collisionTag";
+import emiter from "../../../assets/jsons/emitter.json"
+import { Container, Texture } from "pixi.js";
+import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
+import TWEEN from "@tweenjs/tween.js";
+
 
 export class PickUpScene extends Scene {
     constructor() {
@@ -20,8 +25,118 @@ export class PickUpScene extends Scene {
         this._initUI();
         this._initReward();
         this._initBtnPlay();
+        this._initEvents();
+        this._initEffect();
+        this._initHand();
         this.picking = false;
 
+    }
+
+    _initHand() {
+        this.hand = new PIXI.Sprite(PIXI.Texture.from("spr_hand"));
+        this.hand.anchor.set(0.5, 0.5);
+        this.hand.y = this.bgMachine.height / 2 - 30;
+        this.hand.x = 30
+        this.bgMachine.addChild(this.hand);
+
+        this.tweenHand = Tween.createTween(
+            this.hand.position,
+            { x: 70, y: this.bgMachine.height / 2 - 10 },
+            {
+                duration: 0.5,
+                yoyo: true,
+                loop: true,
+                easing: TWEEN.Easing.Quadratic.InOut,
+            }
+        ).start();
+    }
+
+
+    _initEvents() {
+        this.clawMachineUI.on("onPickUp", (obj) => {
+            var dura = this.clawMachineUI.x - (-this.bgMachine.width / 2 + this.clawMachineUI.width / 2 - 30)
+            Tween.createTween(
+                this.clawMachineUI,
+                { x: -this.bgMachine.width / 2 + this.clawMachineUI.width / 2 - 30 },
+                {
+                    duration: dura / 250,
+                    delay: 0.5,
+                    onComplete: () => {
+                        Tween.createTween(obj.position, { y: 970 }, {
+                            duration: 0.8,
+                            onComplete: () => { this.showReward(obj) }
+                        }).start();
+                    }
+                }
+            ).start();
+        });
+    }
+
+    showReward(obj) {
+        var pos = obj.parent.toGlobal(obj.position);
+        obj.parent.removeChild(obj);
+        this.bgMachine.addChild(obj);
+        var posLocal = obj.parent.toLocal(pos, null, null, true);
+        obj.position.set(posLocal.x, posLocal.y);
+        obj.scale.set(0.8);
+        Tween.createTween(
+            obj.position,
+            {
+                x: 0,
+                y: 0 - obj.height / 2 - 40
+            },
+            {
+                duration: 1,
+                delay: 0.3,
+                onUpdate: () => {
+                    obj.angle -= 4.9;
+                },
+                onComplete: () => {
+                    this.getReward(0, -obj.height / 2 - 40);
+                    this.emitterRight.emit = true;
+                    obj.parent.removeChild(obj);
+                    obj.destroy();
+                }
+            }
+        ).start();
+    }
+
+    getReward(x, y) {
+        let reward = new PIXI.Sprite(PIXI.Texture.from("circle"));
+        reward.anchor.set(0.5, 0.5);
+        reward.x = x;
+        reward.y = y;
+        reward.scale.set(0.2);
+
+        let spaceShip = new PIXI.Sprite(PIXI.Texture.from("ship_phoenix_dark"));
+        spaceShip.anchor.set(0.5, 0.5);
+        spaceShip.y = -8;
+        spaceShip.scale.set(0.9);
+        reward.addChild(spaceShip);
+        this.bgMachine.addChild(reward);
+        Tween.createTween(
+            reward.scale,
+            { x: 1, y: 1 },
+            { duration: 0.5 }
+        ).start();
+    }
+
+    _initEffect() {
+        let texture = Texture.from("halo");
+        let texture1 = Texture.from("spark");
+        this.effectRight = new Container();
+        this.effectRight.x = 0;
+        this.effectRight.y = -100;
+        this.bgMachine.addChild(this.effectRight);
+        this.emitterRight = new Emitter(
+            this.effectRight,
+            upgradeConfig(emiter, [texture, texture1])
+        );
+        this.emitterRight.emit = false;
+    }
+
+    update(delta) {
+        this.emitterRight.update(delta);
     }
 
     pickUp() {
@@ -34,8 +149,8 @@ export class PickUpScene extends Scene {
     _initBtnPlay() {
         this.btnPlay = new PIXI.Sprite(PIXI.Texture.from("btn_play"));
         this.btnPlay.anchor.set(0.5);
-        this.btnPlay.x = -74;
-        this.btnPlay.y = this.bgMachine.height / 2 + 194;
+        this.btnPlay.x = -101 + this.btnPlay.width / 2;
+        this.btnPlay.y = this.bgMachine.height / 2 - this.btnPlay.height / 2 - 50;
         this.bgMachine.addChild(this.btnPlay);
 
         this.btnPlay.interactive = true;
@@ -44,97 +159,82 @@ export class PickUpScene extends Scene {
 
     _initReward() {
         this.groupReward = [];
+        this._initItem(
+            PIXI.Texture.from("glass_bottle"),
+            this.bgMachine.width / 2 - 26,
+            this.bgMachine.height / 2 - 227,
+            120,
+            200,
+            0
+        );
 
-        let reward = new PIXI.Sprite(PIXI.Texture.from("glass_bottle"));
+        this._initItem(
+            PIXI.Texture.from("pumpkin"),
+            100,
+            this.bgMachine.height / 2 - 220,
+            200,
+            150,
+            0
+        );
+
+        this._initItem(
+            PIXI.Texture.from("witch_hat"),
+            250,
+            this.bgMachine.height / 2 - 300,
+            200,
+            150,
+            -60
+        );
+
+        this._initItem(
+            PIXI.Texture.from("skullcap"),
+            -this.bgMachine.width / 2 + 215,
+            this.bgMachine.height / 2 - 260,
+            200,
+            150,
+            0, 20, 30
+        );
+
+    }
+
+    _initItem(texture, x, y, colliderWidth, colliderHeight, angle, x1 = 0, y1 = 0) {
+
+        let ship = new PIXI.Sprite(PIXI.Texture.from("ship_phoenix_dark1"));
+        ship.angle = angle + 60;
+        ship.x = x - texture.width / 2;
+        ship.y = y - texture.height / 2 + 27;
+        ship.anchor.set(0.5, 0.5);
+        this.bgMachine.addChild(ship);
+
+        let reward = new PIXI.Sprite(texture);
         reward.anchor.set(0.5, 0.5);
-        reward.x = this.bgMachine.width / 2 + 50;
-        reward.y = this.bgMachine.height / 2 - 130;
-        reward.width = reward.width * 0.7;
-        reward.height = reward.height * 0.7;
-        // reward.scale.set(0.7);
-        this.bgMachine.addChild(reward);
+        reward.angle = -60;
+        reward.x = -25 + x1;
+        reward.y = -20 + y1;
+        ship.addChild(reward);
         this.groupReward.push(reward);
 
         let collider = new Collider(CollisionTag.Reward);
-        collider.width = 300;
-        collider.height = 400;
-        reward.addChild(collider);
-
-        let reward1 = new PIXI.Sprite(PIXI.Texture.from("pumpkin"));
-        reward1.anchor.set(0.5, 0.5);
-        reward1.x = 0;
-        reward1.y = this.bgMachine.height / 2 - 130;
-        this.bgMachine.addChild(reward1);
-        this.groupReward.push(reward1);
-
-        let collider1 = new Collider(CollisionTag.Reward);
-        collider1.width = 300;
-        collider1.height = 250;
-        reward1.addChild(collider1);
-
-        let reward2 = new PIXI.Sprite(PIXI.Texture.from("witch_hat"));
-        reward2.anchor.set(0.5, 0.5);
-        reward2.x = 220;
-        reward2.y = this.bgMachine.height / 2 - 225;
-        reward2.angle = -60;
-        this.bgMachine.addChild(reward2);
-        this.groupReward.push(reward2);
-
-        let collider2 = new Collider(CollisionTag.Reward);
-        collider2.width = 350;
-        collider2.height = 210;
-        collider2.angle = 60;
-        reward2.addChild(collider2);
-
-        let reward3 = new PIXI.Sprite(PIXI.Texture.from("skullcap"));
-        reward3.anchor.set(0.5, 0.5);
-        reward3.x = -this.bgMachine.width / 2 + 50;
-        reward3.y = this.bgMachine.height / 2 - 130;
-        this.bgMachine.addChild(reward3);
-        this.groupReward.push(reward3);
-
-        let collider3 = new Collider(CollisionTag.Reward);
-        collider3.width = 300;
-        collider3.height = 250;
-        reward3.addChild(collider3);
-
-        let reward4 = new PIXI.Sprite(PIXI.Texture.from("glass_bottle"));
-        reward4.anchor.set(0.5, 0.5);
-        reward4.x = -170;
-        reward4.y = this.bgMachine.height / 2 - 280;
-        reward4.width = PIXI.Texture.from("glass_bottle").width * 0.7;
-        reward4.height = PIXI.Texture.from("glass_bottle").height * 0.7;
-        console.log(reward4.getBounds(), PIXI.Texture.from("glass_bottle"));
-        // reward4.scale.set(0.7);
-        reward4.angle = -120;
-        this.bgMachine.addChild(reward4);
-        this.groupReward.push(reward4);
-
-        let collider4 = new Collider(CollisionTag.Reward);
-        collider4.width = 250;
-        collider4.height = 350;
-        reward4.addChild(collider4);
-
+        collider.width = colliderWidth;
+        collider.height = colliderHeight;
+        ship.addChild(collider);
     }
 
     _initUI() {
         this.bgMachine = new PIXI.Sprite(PIXI.Texture.from("Claw_machine_Halloween"));
         this.bgMachine.anchor.set(0.5);
-        this.bgMachine.width = this.bgMachine.width * 0.62;
-        this.bgMachine.height = this.bgMachine.height * 0.62;
-        // this.bgMachine.scale.set(0.62);
         this.bgMachine.x = GameResizer.width / 2;
         this.bgMachine.y = GameResizer.height / 2;
         this.addChild(this.bgMachine);
 
         this.clawMachineUI = new ClawMachineUI();
-        this.clawMachineUI.x = -this.bgMachine.width / 2 + 10;
-        this.clawMachineUI.y = -this.bgMachine.height / 2 - 125;
+        this.clawMachineUI.x = -this.bgMachine.width / 2 + this.clawMachineUI.width / 2 - 20;
+        this.clawMachineUI.y = -this.bgMachine.height / 2 * 0.75;
         this.bgMachine.addChild(this.clawMachineUI);
 
         this.tweenArrow = Tween.createTween(
             this.clawMachineUI,
-            { x: this.bgMachine.width / 2 - 10 },
+            { x: this.bgMachine.width / 2 - this.clawMachineUI.width / 2 + 20 },
             {
                 duration: 2,
                 yoyo: true,
