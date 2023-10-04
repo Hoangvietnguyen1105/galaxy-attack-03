@@ -82,7 +82,7 @@ export class ClawMachineUI extends PIXI.Container {
         });
 
         let collider = new Collider(CollisionTag.ClawHook);
-        collider.width = 150;
+        collider.width = 100;
         collider.height = 120;
         collider.y = 65;
 
