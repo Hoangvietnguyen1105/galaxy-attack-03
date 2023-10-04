@@ -8,6 +8,7 @@
     "start": "webpack serve --env env=dev --open",
     "host": "webpack serve --env env=host --open",
     "build": "webpack --env env=preview",
+     "deploy": "gh-pages -d dist",
     "export": "webpack --env env=export",
     "preview-upload": "webpack --env env=preview && aws s3 cp preview s3://abidn.space/super-tiles --recursive --cache-control max-age=120 --acl public-read",
     "export-upload": "webpack --env env=export && aws s3 cp dist/supper-tiles s3://abidn.space/super-tiles --recursive --cache-control max-age=120 --acl public-read"
@@ -30,6 +31,7 @@
   "dependencies": {
     "@pixi/particle-emitter": "^5.0.8",
     "@pixi/sound": "^5.2.1",
+    "gh-pages": "^5.0.0",
     "@tweenjs/tween.js": "^21.0.0",
     "canvas-confetti": "^1.8.0",
     "pixi-scrollbox": "^2.3.1",
@@ -38,7 +40,7 @@
   },
     "repository": {
     "type": "git",
-    "url": "git+https://github.com/Trinhhuutung100/ProjectBallz.git"
-  },
+    "url": "git+https://github.com/Hoangvietnguyen1105/galaxy-attack-03.git"
+  }
   
 }
