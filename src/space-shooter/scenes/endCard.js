@@ -175,18 +175,30 @@ export class EndCard extends Scene {
   _initEnemy(){
     let enemies = []
     for(var i = 0 ; i < 5; i++){
-      let enemy = new EnemyGalaga("Fly Robot 17")
-      this.addChild(enemy)
+      let enemy = new PureSprite(Texture.from("Fly Robot 17"), new PureTransform({
+      pivotX: 2.5- 0.5 * i,
+      pivotY: 9.5 - 0.5 * i,
+      anchorX: 0.5,
+      anchorY: 0.8
+      }));
+      this.addChild(enemy.displayObject);
       enemies.push(enemy)
-      enemy.y = 250 + i* 50
-      enemy.x = 150 + i*50
+      console.log(GameResizer.width)
+      // enemy.y = 250 + i* 50
+      // enemy.x = 150 + i*50
     }
     for(var i = 0 ; i < 5; i++){
-      let enemy = new EnemyGalaga("Fly Robot 17")
-      this.addChild(enemy)
+        let enemy = new PureSprite(Texture.from("Fly Robot 17"), new PureTransform({
+      pivotX: 0.5- 0.5 * i,
+      pivotY: 7.5 + 0.5 * i,
+      anchorX: 0.5,
+      anchorY: 0.8
+      }));
+      this.addChild(enemy.displayObject);
       enemies.push(enemy)
-      enemy.y = 250 + i* 50
-      enemy.x = 550 - i*50
+      console.log(GameResizer.width)
+      enemies.push(enemy)
+     
     }
     enemies.forEach(element => {
         var tween = Tween.createTween(element, { y: element.y + 200 }, {
