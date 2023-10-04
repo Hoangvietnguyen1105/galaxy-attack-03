@@ -12,6 +12,7 @@ import emiter from "../../../assets/jsons/emitter.json"
 import { Container, Texture } from "pixi.js";
 import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
 import TWEEN from "@tweenjs/tween.js";
+import { SceneManager } from "../../pureDynamic/PixiWrapper/scene/sceneManager";
 
 
 export class PickUpScene extends Scene {
@@ -108,7 +109,7 @@ export class PickUpScene extends Scene {
         reward.y = y;
         reward.scale.set(0.2);
 
-        let spaceShip = new PIXI.Sprite(PIXI.Texture.from("ship_phoenix_dark"));
+        let spaceShip = new PIXI.Sprite(PIXI.Texture.from("ship"));
         spaceShip.anchor.set(0.5, 0.5);
         spaceShip.y = -8;
         spaceShip.scale.set(0.9);
@@ -117,8 +118,15 @@ export class PickUpScene extends Scene {
         Tween.createTween(
             reward.scale,
             { x: 1, y: 1 },
-            { duration: 0.5 }
+            { duration: 0.5 },
+            
         ).start();
+        Tween.createCountTween({
+            duration:3,
+            onComplete:()=>{
+                this.goToPlayScene()
+            }
+        }).start()
     }
 
     _initEffect() {
@@ -199,7 +207,7 @@ export class PickUpScene extends Scene {
 
     _initItem(texture, x, y, colliderWidth, colliderHeight, angle, x1 = 0, y1 = 0) {
 
-        let ship = new PIXI.Sprite(PIXI.Texture.from("ship_phoenix_dark1"));
+        let ship = new PIXI.Sprite(PIXI.Texture.from("ship"));
         ship.angle = angle + 60;
         ship.x = x - texture.width / 2;
         ship.y = y - texture.height / 2 + 27;
@@ -256,6 +264,10 @@ export class PickUpScene extends Scene {
         });
         this.bg = new TilingBackground(this, texture, transform);
     }
+    
+    goToPlayScene(){
+    SceneManager.load(SceneManager.getScene(GameConstant.SCENE_PLAY));
+  }
 
     resize() {
         super.resize();
