@@ -15,7 +15,11 @@ export class GreenShip extends ShipBase {
   constructor(scene) {
     super(scene);
     this.addSmoke(Texture.from("smoke_blue"), 0, 90, 0.7, 1, 1);
-    this.initBaseSprite(Texture.from("ship_phoenix_dark"));
+    this.initBaseSprite(Texture.from("ship"));
+
+
+    this.height = 257
+    this.width = 158
     this.collider.y = 30;
     this.body.setHP(GameConstant.SHIP_HP);
     
@@ -41,12 +45,13 @@ export class GreenShip extends ShipBase {
       this.enableWeapon(this.weapons[0], 0, -90);
     }
     else if (level === 1) {
+      console.log('level1')
       this.enableWeapon(this.weapons[0], -15, -90);
       this.enableWeapon(this.weapons[1], 15, -90);
     }
     else if (level === 2) {
       this.enableWeapon(this.weapons[0], 0, -90);
-      this.enableWeapon(this.weapons[1], -50, -40, 0);
+       this.enableWeapon(this.weapons[1], -50, -40, 0);
       this.enableWeapon(this.weapons[2], 50, -40, 0);
       this._setIntervalWeapon(0.1);
     }
@@ -90,8 +95,9 @@ export class GreenShip extends ShipBase {
     bulletCollider.height = 100;
     bulletCollider.y = -60;
 
-    let bullet = new VelocityBullet(PIXI.Texture.from("bullet_phoenix"), bulletCollider);
+    let bullet = new VelocityBullet(PIXI.Texture.from("bulletTexture"), bulletCollider);
     bullet.anchor.set(0.5, 0.9);
+    // bullet.bulletScale.set(0.1, 0.1);
     bullet.init(10);
     bullet.on(BulletEvent.Spawn, this.onSpawnBullet.bind(this));
     bullet.on(BulletEvent.Despawn, this.onDespawnBullet.bind(this));

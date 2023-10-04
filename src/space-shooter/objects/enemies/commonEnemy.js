@@ -12,7 +12,7 @@ export class CommonEnemy extends EnemyBase {
     this.sprite = null;
     /** @type {SpineAnimator} */
     this.animator = null;
-    this.collider.collideData.damage = 20;
+    this.collider.collideData.damage = 40;
     this._initExplodeEffect();
     this._initHealthBar();
   }

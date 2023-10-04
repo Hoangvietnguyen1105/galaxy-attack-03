@@ -71,11 +71,11 @@ export class VelocityBullet extends BulletBase {
 
   create() {
     let bullet = super.create();
-    let sprite = new PIXI.Sprite(this.texture);
-    sprite.anchor.copyFrom(this.anchor);
-    sprite.scale.copyFrom(this.bulletScale);
-    bullet.addChild(sprite);
-
+    this.sprite = new PIXI.Sprite(this.texture);
+    this.sprite.anchor.copyFrom(this.anchor);
+    this.sprite.scale.copyFrom(this.bulletScale);
+    bullet.addChild(this.sprite);
+    
     // TODO: Improve spawn collider logic
     let collider = this.collider.clone();
     collider.collideData = {

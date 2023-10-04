@@ -63,7 +63,12 @@ export class PlayScene extends Scene {
   }
 
   onStart() {
-    GameStateManager.state = GameState.Playing;
+    Tween.createCountTween({
+      duration:1.5,
+      onComplete:()=>{
+        GameStateManager.state = GameState.Playing;
+      }
+    }).start()
     Game.onStart();
     this.playerContainer.visible = true;
     this.player.start();
@@ -224,7 +229,7 @@ export class PlayScene extends Scene {
     let greenShip = new GreenShip(this);
     greenShip.body.immortal = GameConstant.SHIP_IMMORTAL;
     this.player = new Player();
-    this.player.scale.set(GameConstant.REDUCE_SIZE_SHIP);
+    // this.player.scale.set(GameConstant.REDUCE_SIZE_SHIP);
     this.player.y = GameResizer.height * 0.3;
     this.player.setShip(greenShip);
     this.player.on(PlayerEvent.Die, this._onPlayerDie, this);
@@ -269,7 +274,7 @@ export class PlayScene extends Scene {
   }
 
   _onWave4Complete() {
-    this.awesomeUI.stopAnimation();
+    //this.awesomeUI.stopAnimation();
     // let sfxWarning = SoundManager.play("sfx_warning", 0.3, true);
     // SoundManager.stop(sfxWarning);
     // this._playBackgroundMusic("music_bg_2");

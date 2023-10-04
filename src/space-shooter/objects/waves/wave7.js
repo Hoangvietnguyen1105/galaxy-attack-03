@@ -73,7 +73,7 @@ export class Wave7 extends CommonWave {
 
     let bulletTexture = Texture.from("bullet_enemy");
     this.enemyBullet = new VelocityBullet(bulletTexture, bulletCollider);
-    this.enemyBullet.velocity.set(0, 350);
+    this.enemyBullet.velocity.set(0, 550);
     this.enemyBullet.anchor.set(0.5, 0);
     this.enemyBullet.bulletScale.set(1, -1);
     this.enemyBullet.init(10);

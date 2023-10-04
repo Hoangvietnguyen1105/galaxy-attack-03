@@ -13,7 +13,7 @@ export class SoldierEnemy extends Container {
   }
 
   _initBody() {
-    this.bodyEnemy = new Sprite(Texture.from("enemy_soldier_body"));
+    this.bodyEnemy = new Sprite(Texture.from("Fly Robot 22"));
     this.bodyEnemy.anchor.set(0.5);
     this.addChild(this.bodyEnemy);
   }

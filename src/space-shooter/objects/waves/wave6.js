@@ -107,7 +107,14 @@ export class Wave6 extends CommonWave {
      
     let enemy = Util.randomFromList(this.enemies.filter(enemy => !enemy.attacking && enemy.ship.name === 'galaga'));
     enemy && this.playAttackAnimation(enemy);
+    
     let enemy2 = Util.randomFromList(this.enemies.filter(enemy2 =>enemy2.ship.name !== 'galaga'));
+    enemy2?.shoot();
+    enemy2 = Util.randomFromList(this.enemies.filter(enemy2 =>enemy2.ship.name !== 'galaga'));
+    enemy2?.shoot();
+    enemy2 = Util.randomFromList(this.enemies.filter(enemy2 =>enemy2.ship.name !== 'galaga'));
+    enemy2?.shoot();
+    enemy2 = Util.randomFromList(this.enemies.filter(enemy2 =>enemy2.ship.name !== 'galaga'));
     enemy2?.shoot();
    }
   }
@@ -116,10 +123,10 @@ export class Wave6 extends CommonWave {
   onEnemyDie(enemy) {
     super.onEnemyDie(enemy);
     this.enemiesDie++;
-    if (this.enemiesDie === 1) {
+    if (this.enemiesDie === 3) {
       this.boosterSpawner.spawnBooster(BoosterType.LevelUp, enemy.getGlobalPosition());
     }
-    else if (this.enemiesDie === 5) {
+    else if (this.enemiesDie === 7) {
       this.boosterSpawner.spawnBooster(BoosterType.LevelUp, enemy.getGlobalPosition());
     }
     else if (this.enemiesDie === 15) {
@@ -137,7 +144,7 @@ export class Wave6 extends CommonWave {
 
     let bulletTexture = Texture.from("bullet_enemy");
     this.enemyBullet = new VelocityBullet(bulletTexture, bulletCollider);
-    this.enemyBullet.velocity.set(0, 350);
+    this.enemyBullet.velocity.set(0, 550);
     this.enemyBullet.anchor.set(0.5, 0);
     this.enemyBullet.bulletScale.set(1, -1);
     this.enemyBullet.init(10);
@@ -166,6 +173,10 @@ export class Wave6 extends CommonWave {
           this.addEnemy(row, l - col, this.foreWave, false, delay, "blue");
           delay += 0.1;
         }
+        else if (wave1Data[row][col] === 3) {
+          this.addEnemy(row, l - col, this.foreWave, true, delay, "violet");
+          delay += 0.1;
+        }
         else if (wave1Data[row][col] === 11) {
           this.addEnemy(row, l - col, this.foreWave, true, delay, "red");
           delay += 0.1;
@@ -187,8 +198,11 @@ export class Wave6 extends CommonWave {
     if (type === "blue") {
       enemy.ship = this._createNormalEnemy(enemy);
     }
-    else {
+    if(type === "red") {
       enemy.ship = this._createRedEnemy(enemy);
+    }
+    if(type === "violet"){
+      enemy.ship =  this.createNormalEnemy2(enemy)
     }
     enemy.row = row;
     enemy.col = col;
@@ -210,8 +224,8 @@ export class Wave6 extends CommonWave {
 
   _createFormationAnimation(enemy, isLeft = true, delay = 0) {
     let direction = isLeft ? -1 : 1;
-    let xTarget = enemy.col * 20 * direction - direction * 20;
-    let yTarget = enemy.row * 40;
+    let xTarget = enemy.col * 30 * direction - direction * 30;
+    let yTarget = enemy.row * 60;
 
     let x0 = enemy.x;
     let y0 = enemy.y;
@@ -246,7 +260,12 @@ export class Wave6 extends CommonWave {
   }
 
   _createNormalEnemy(enemy) {
-    let ship = new EnemyGalaga("anim_enemy_1");
+    let ship = new EnemyGalaga("Fly Robot 17");
+    enemy.addAnimator(ship);
+    return ship;
+  }
+  createNormalEnemy2(enemy) {
+    let ship = new EnemyGalaga("Fly Robot 16");
     enemy.addAnimator(ship);
     return ship;
   }

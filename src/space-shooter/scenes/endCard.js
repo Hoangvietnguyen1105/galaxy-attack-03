@@ -13,7 +13,13 @@ import { ObjectFactory } from "../objectFactory";
 import { Tween } from "../../systems/tween/tween";
 import { SpineAnimator } from "../../integrate/spineAnimator";
 import { AssetManager } from "../../assetManager";
-
+import { SoldierEnemy } from "../objects/enemies/soldierEnemy";
+import { EnemyGalaga } from "../objects/enemies/enemyGalaga";
+import TWEEN from "@tweenjs/tween.js";
+import { Time } from "../../systems/time/time";
+import wave1Data from "../../../assets/jsons/wave1Data.json"
+import { CommonEnemy } from "../objects/enemies/commonEnemy";
+import { EnemyEvent } from "../objects/enemies/enemyEvent";
 export class EndCard extends Scene {
   constructor() {
     super(GameConstant.SCENE_END_CARD);
@@ -27,6 +33,8 @@ export class EndCard extends Scene {
     this._initShip();
     this._initWarning();
     this._initBlurBackground();
+    this._initEnemy()
+
     this._intiSkillIcon();
   }
 
@@ -93,7 +101,7 @@ export class EndCard extends Scene {
   }
 
   _initShip() {
-    this.ship = new PureSprite(Texture.from("ship_phoenix_dark"), new PureTransform({
+    this.ship = new PureSprite(Texture.from("ship"), new PureTransform({
       pivotX: 0.5,
       pivotY: 0.5,
       anchorX: 0.5,
@@ -101,6 +109,13 @@ export class EndCard extends Scene {
     }));
     this.addChild(this.ship.displayObject);
   }
+
+
+  
+
+
+ 
+
 
   _intiSkillIcon() {
     var count = 0;
@@ -157,13 +172,45 @@ export class EndCard extends Scene {
       }
     });
   }
+  _initEnemy(){
+    let enemies = []
+    for(var i = 0 ; i < 5; i++){
+      let enemy = new EnemyGalaga("Fly Robot 17")
+      this.addChild(enemy)
+      enemies.push(enemy)
+      enemy.y = 250 + i* 50
+      enemy.x = 150 + i*50
+    }
+    for(var i = 0 ; i < 5; i++){
+      let enemy = new EnemyGalaga("Fly Robot 17")
+      this.addChild(enemy)
+      enemies.push(enemy)
+      enemy.y = 250 + i* 50
+      enemy.x = 550 - i*50
+    }
+    enemies.forEach(element => {
+        var tween = Tween.createTween(element, { y: element.y + 200 }, {
+            duration: 0.8,
+            onComplete: () => {
+              tween2.start();
+         },
+        }).start();
+        var tween2 = Tween.createTween(element, { y: "+100" }, {
+          duration: 1.2,
+          yoyo: true,
+          loop: Infinity,
+       });
+    });
+    
+  }
+
 
   _intiBoss() {
-    this.boss = new SpineAnimator(AssetManager.spines.boss);
-    this.boss.state.setAnimation(0, "Idle", true);
+    this.boss = new Sprite(Texture.from("boss"));
+    this.boss.anchor.set(0.5,0.5)
     this.boss.y -= this.boss.height / 2;
     this.topMid.addChild(this.boss);
-
+    
     var tween = Tween.createTween(this.boss, { y: 250 }, {
       duration: 0.8,
       onComplete: () => {

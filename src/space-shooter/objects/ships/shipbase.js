@@ -42,9 +42,9 @@ export class ShipBase extends PIXI.Container {
     this.addChild(this.baseAnimator);
   }
    _initHealthBar() {
-    this.healthBar = new CurvedHealthBar(140, 6);
+    this.healthBar = new CurvedHealthBar(80, 6);
     this.healthBar.x = 0;
-    this.healthBar.y = 50;
+    this.healthBar.y = 200;
     this.addChild(this.healthBar);
     this.healthBar.visible = true;
     
@@ -57,11 +57,13 @@ export class ShipBase extends PIXI.Container {
   onCollide(collider) {
     let damage = collider.collideData.damage;
     if (damage) {
-      if(this.body.hp <= -50)
-        damage = 0
+     
       this.body.takeDamage(damage);
+      if(this.body.hp <= -50){
+        this.body.hp = -50
+      }
       if(!this.body.immortal)
-        this.playImmortalEffect(0.5)
+        this.playImmortalEffect(0.3)
     }
 
     let levelup = collider.collideData.levelup;

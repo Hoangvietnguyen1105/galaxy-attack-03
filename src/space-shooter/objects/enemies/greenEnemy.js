@@ -11,7 +11,7 @@ export class GreenEnemy extends Container {
   }
 
   _initBody() {
-    this.bodyEnemy = new Sprite(Texture.from("enemy_green_body"));
+    this.bodyEnemy = new Sprite(Texture.from("Fly Robot 11"));
     this.bodyEnemy.anchor.set(0.5);
     this.addChild(this.bodyEnemy);
   }
