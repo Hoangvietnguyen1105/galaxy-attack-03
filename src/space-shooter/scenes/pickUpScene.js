@@ -13,6 +13,8 @@ import { Container, Texture } from "pixi.js";
 import { Emitter, upgradeConfig } from "@pixi/particle-emitter";
 import TWEEN from "@tweenjs/tween.js";
 import { SceneManager } from "../../pureDynamic/PixiWrapper/scene/sceneManager";
+import confetti from "canvas-confetti";
+import { Game } from "../../game";
 
 
 export class PickUpScene extends Scene {
@@ -29,8 +31,50 @@ export class PickUpScene extends Scene {
         this._initEvents();
         this._initEffect();
         this._initHand();
+        this._initConfetti();
         this.picking = false;
 
+    }
+
+    _initConfetti() {
+        this.confettiCanvas = document.createElement("canvas");
+        document.body.appendChild(this.confettiCanvas);
+        this.confettiCanvas.style.position = "fixed";
+        this.confettiCanvas.style.top = "0";
+        this.confettiCanvas.style.left = "0";
+        this.confettiCanvas.style.pointerEvents = "none";
+        this.confettiCanvas.style.zIndex = 100;
+        this.confettiCanvas.style.backgroundColor = "transparent";
+        this.confettiCanvas.width = window.innerWidth;
+        this.confettiCanvas.height = window.innerHeight;
+
+        this.confetti = confetti.create(this.confettiCanvas, {
+            resize: true,
+        });
+    }
+
+    playFx() {
+        this.confetti({
+            particleCount: 100,
+            spread: 50,
+            origin: { x: 0, y: 0.7 },
+            angle: 70,
+            scalar: 2,
+            startVelocity: 60,
+        });
+        this.confetti({
+            particleCount: 100,
+            spread: 50,
+            origin: { x: 1, y: 0.7 },
+            angle: 110,
+            scalar: 2,
+            startVelocity: 60,
+        });
+    }
+
+    _resizeConfetti() {
+        this.confettiCanvas.width = window.innerWidth;
+        this.confettiCanvas.height = window.innerHeight;
     }
 
     _initHand() {
@@ -63,7 +107,7 @@ export class PickUpScene extends Scene {
                     duration: dura / 250,
                     delay: 0.5,
                     onComplete: () => {
-                        Tween.createTween(obj.position, { y: 970 }, {
+                        Tween.createTween(obj.position, { y: 1000 }, {
                             duration: 0.8,
                             onComplete: () => { this.showReward(obj) }
                         }).start();
@@ -103,23 +147,37 @@ export class PickUpScene extends Scene {
     }
 
     getReward(x, y) {
+        let bg_reward = new PIXI.Sprite(PIXI.Texture.from("bg_reward"));
+        bg_reward.anchor.set(0.5, 0.5);
+        bg_reward.x = x;
+        bg_reward.y = y;
+        bg_reward.alpha = 0.9;
+        bg_reward.scale.set(1.2);
+        this.bgMachine.addChild(bg_reward);
+
         let reward = new PIXI.Sprite(PIXI.Texture.from("circle"));
         reward.anchor.set(0.5, 0.5);
+        reward.scale.set(0.2);
         reward.x = x;
         reward.y = y;
-        reward.scale.set(0.2);
+        this.bgMachine.addChild(reward);
 
         let spaceShip = new PIXI.Sprite(PIXI.Texture.from("ship"));
         spaceShip.anchor.set(0.5, 0.5);
         spaceShip.y = -8;
         spaceShip.scale.set(0.9);
         reward.addChild(spaceShip);
-        this.bgMachine.addChild(reward);
+        this.playFx();
         Tween.createTween(
             reward.scale,
             { x: 1, y: 1 },
             { duration: 0.5 },
             
+            {
+                duration: 0.5,
+                onComplete: () => {
+                }
+            }
         ).start();
         Tween.createCountTween({
             duration:3,
@@ -152,6 +210,8 @@ export class PickUpScene extends Scene {
         this.picking = true;
         this.tweenArrow.stop();
         this.clawMachineUI.downward(8);
+        this.tweenHand.stop();
+        this.hand.visible = false;
     }
 
     _initBtnPlay() {
@@ -186,6 +246,15 @@ export class PickUpScene extends Scene {
         );
 
         this._initItem(
+            PIXI.Texture.from("pumpkin"),
+            110,
+            this.bgMachine.height / 2 - 410,
+            200,
+            150,
+            -20
+        );
+
+        this._initItem(
             PIXI.Texture.from("witch_hat"),
             250,
             this.bgMachine.height / 2 - 300,
@@ -202,6 +271,34 @@ export class PickUpScene extends Scene {
             150,
             0, 20, 30
         );
+
+        this._initItem(
+            PIXI.Texture.from("glass_bottle"),
+            -40,
+            this.bgMachine.height / 2 - 340,
+            120,
+            120,
+            -110
+        );
+
+        this._initItem(
+            PIXI.Texture.from("glass_bottle"),
+            320,
+            this.bgMachine.height / 2 - 400,
+            120,
+            120,
+            -90
+        );
+
+        this._initItem(
+            PIXI.Texture.from("skullcap"),
+            -this.bgMachine.width / 2 + 215,
+            this.bgMachine.height / 2 - 450,
+            200,
+            150,
+            0, 20, 30
+        );
+
 
     }
 
@@ -273,5 +370,7 @@ export class PickUpScene extends Scene {
         super.resize();
         this.bgMachine.x = GameResizer.width / 2;
         this.bgMachine.y = GameResizer.height / 2;
+
+        this._resizeConfetti();
     }
 }

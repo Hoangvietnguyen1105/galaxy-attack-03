@@ -31,6 +31,7 @@
     "@pixi/particle-emitter": "^5.0.8",
     "@pixi/sound": "^5.2.1",
     "@tweenjs/tween.js": "^21.0.0",
+    "canvas-confetti": "^1.8.0",
     "pixi-scrollbox": "^2.3.1",
     "pixi-spine": "^4.0.4",
     "pixi.js": "^7.2.4"
