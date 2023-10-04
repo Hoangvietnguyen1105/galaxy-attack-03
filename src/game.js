@@ -14,6 +14,7 @@ import { GameState, GameStateManager } from "./pureDynamic/systems/gameStateMana
 import { SceneManager } from "./pureDynamic/PixiWrapper/scene/sceneManager";
 import Adapter from "./adsAdapter/adapter";
 import { EndCard } from "./space-shooter/scenes/endCard";
+import { PickUpScene } from "./space-shooter/scenes/pickUpScene";
 
 export class Game {
   static init() {
@@ -28,8 +29,8 @@ export class Game {
     Debug.log("Creative", "Load");
 
     this.app = new Application({
-      width  : GameConstant.GAME_WIDTH,
-      height : GameConstant.GAME_HEIGHT,
+      width: GameConstant.GAME_WIDTH,
+      height: GameConstant.GAME_HEIGHT,
     });
 
     document.body.appendChild(this.app.view);
@@ -57,8 +58,9 @@ export class Game {
     SceneManager.init(this.app.stage, [
       new PlayScene(),
       new EndCard(),
+      new PickUpScene(),
     ]);
-    SceneManager.load(SceneManager.getScene(GameConstant.SCENE_PLAY));
+    SceneManager.load(SceneManager.getScene(GameConstant.SCENE_PICK_UP));
     this.app.ticker.add(this._update.bind(this));
   }
 

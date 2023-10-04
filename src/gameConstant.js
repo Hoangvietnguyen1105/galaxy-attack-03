@@ -7,6 +7,7 @@ export const GameConstant = Object.freeze({
 
   SCENE_PLAY: "PlayScene",
   SCENE_END_CARD: "EndCardScene",
+  SCENE_PICK_UP: "PickUpScene",
 
   DEBUG_ON: true,
   DEBUG_DRAW_COLLIDER: false,
