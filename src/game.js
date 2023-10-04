@@ -58,7 +58,7 @@ export class Game {
       new PlayScene(),
       new EndCard(),
     ]);
-    SceneManager.load(SceneManager.getScene(GameConstant.SCENE_END_CARD));
+    SceneManager.load(SceneManager.getScene(GameConstant.SCENE_PLAY));
     this.app.ticker.add(this._update.bind(this));
   }
 
